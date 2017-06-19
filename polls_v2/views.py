@@ -9,7 +9,7 @@ def polls(request):
     users_ip = get_users_ip(request)
     polls = Poll.objects.all()
     args['polls'] = polls
-    return render(request, 'polls/polls_list.html', args)
+    return render(request, 'polls_v2/polls_list.html', args)
 
 def poll_detail(request, poll_id):
     if request.session.get('allow') == False:
@@ -22,11 +22,11 @@ def poll_detail(request, poll_id):
     args['poll'] = poll
     args['choices'] = choices
     args['can_vote'] = can_vote
-    return render(request, 'polls/poll_detail.html', args)
+    return render(request, 'polls_v2/poll_detail.html', args)
 
 def vote(request, poll_id):
     if request.session.get('allow') == False:
-        return redirect('/')    
+        return redirect('/')
     args = {}
     poll = Poll.objects.get(pk=poll_id)
     ip = get_users_ip(request)

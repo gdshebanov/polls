@@ -17,7 +17,7 @@ class Poll(models.Model):
         return result
 
     def can_vote(self, ip_address):
-        return not self.vote_set.filter(ip_address=ip_address).exists()
+        return not self.vote_set.filter(ip_address=ip_address, poll=self).exists()
 
 class Choice(models.Model):
     poll = models.ForeignKey(Poll)
@@ -30,10 +30,13 @@ class Choice(models.Model):
         return self.choice
 
 class Vote(models.Model):
-    ip_address = models.CharField(max_length=20, blank=False, null=False, primary_key=True)
+    ip_address = models.CharField(max_length=20, blank=True, null=True)
     voter_name = models.CharField('Имя', max_length=60, blank=True, null=True)
     poll = models.ForeignKey(Poll)
     choice = models.ForeignKey(Choice)
 
     def __str__(self):
         return self.ip_address
+
+    class Meta:
+        unique_together = ('ip_address', 'poll')
